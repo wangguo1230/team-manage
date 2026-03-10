@@ -7,20 +7,24 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse, FileResponse
 from starlette.middleware.sessions import SessionMiddleware
+import sys
 import logging
 from pathlib import Path
 from datetime import datetime
 
+# 获取项目根目录并将其加入sys.path，以便支持直接运行 python app/main.py
+BASE_DIR = Path(__file__).resolve().parent.parent
+APP_DIR = BASE_DIR / "app"
+if str(BASE_DIR) not in sys.path:
+    sys.path.insert(0, str(BASE_DIR))
+
 from contextlib import asynccontextmanager
+
 # 导入路由
 from app.routes import redeem, auth, admin, api, user, warranty
 from app.config import settings
 from app.database import init_db, close_db, AsyncSessionLocal
 from app.services.auth import auth_service
-
-# 获取项目根目录
-BASE_DIR = Path(__file__).resolve().parent.parent
-APP_DIR = BASE_DIR / "app"
 
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
